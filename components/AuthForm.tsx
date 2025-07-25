@@ -1,36 +1,26 @@
-'use client'
+"use client";
 
 import { useRouter } from 'next/navigation';
-import { FormEvent, useState } from 'react';
-import { useLogin } from '../hooks/useLogin';
-import { useRegister } from '../hooks/useRegister';
+import { FormEvent } from 'react';
 
-export function AuthForm({ type }: { type: 'login' | 'register' }) {
+interface AuthFormProps {
+  type: 'login' | 'register';
+  onSubmit: (data: { username: string; password: string }) => Promise<void>;
+  loading: boolean;
+  error: string | null;
+}
+
+export function AuthForm({ type, onSubmit, loading, error }: AuthFormProps) {
   const router = useRouter();
-  const { login, loading: loadingLogin, error: errorLogin } = useLogin();
-  const { register, loading: loadingRegister, error: errorRegister } = useRegister();
-  const [formError, setFormError] = useState<string | null>(null);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setFormError(null);
     const formData = new FormData(e.currentTarget);
     const username = String(formData.get('username'));
     const password = String(formData.get('password'));
-    try {
-      if (type === 'login') {
-        await login({ username, password });
-      } else {
-        await register({ username, password });
-      }
-      router.push('/reviews');
-    } catch (err: any) {
-      setFormError(err.message);
-    }
+    await onSubmit({ username, password });
+    router.push('/reviews');
   }
-
-  const loading = type === 'login' ? loadingLogin : loadingRegister;
-  const error = formError || (type === 'login' ? errorLogin : errorRegister);
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">

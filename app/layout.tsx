@@ -9,7 +9,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body>
-        <Navbar user={undefined} />
+        <Navbar />
         <main className="p-0">
           {children}
         </main>

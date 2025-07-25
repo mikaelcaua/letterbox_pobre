@@ -1,3 +1,4 @@
+'use client';
 import { useState } from 'react';
 import { logout as logoutService } from '../services/authService';
 

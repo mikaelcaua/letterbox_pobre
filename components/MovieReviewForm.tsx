@@ -1,27 +1,21 @@
-'use client'
+"use client";
 
-import { useRouter } from 'next/navigation';
-import { FormEvent, useState } from 'react';
-import { useCreateReview } from '../hooks/useCreateReview';
+import { FormEvent } from 'react';
 
-export function MovieReviewForm() {
-  const router = useRouter();
-  const { createReview, loading, error } = useCreateReview();
-  const [formError, setFormError] = useState<string | null>(null);
+interface MovieReviewFormProps {
+  onSubmit: (data: { movieName: string; rating: number; comment?: string }) => Promise<void>;
+  loading: boolean;
+  error: string | null;
+}
 
+export function MovieReviewForm({ onSubmit, loading, error }: MovieReviewFormProps) {
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setFormError(null);
     const formData = new FormData(e.currentTarget);
     const movieName = String(formData.get('movieName'));
     const rating = Number(formData.get('rating'));
     const comment = String(formData.get('comment'));
-    try {
-      await createReview({ movieName, rating, comment });
-      router.push('/reviews');
-    } catch (err: any) {
-      setFormError(err.message);
-    }
+    await onSubmit({ movieName, rating, comment });
   }
 
   return (
@@ -60,7 +54,7 @@ export function MovieReviewForm() {
           className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-400 text-black"
         />
       </div>
-      {formError || error ? <div className="text-red-600 text-sm font-semibold">{formError || error}</div> : null}
+      {error && <div className="text-red-600 text-sm font-semibold">{error}</div>}
       <button type="submit" className="w-full bg-green-600 hover:bg-green-700 text-white p-3 rounded font-semibold transition" disabled={loading}>
         {loading ? 'Enviando...' : 'Enviar Avaliação'}
       </button>

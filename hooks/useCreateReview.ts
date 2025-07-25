@@ -1,3 +1,5 @@
+'use client';
+
 import { useState } from 'react';
 import { createReview as createReviewService } from '../services/reviewService';
 

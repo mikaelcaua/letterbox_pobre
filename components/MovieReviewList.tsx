@@ -1,20 +1,19 @@
 "use client";
 
-import { useEffect } from 'react';
-import { useMyReviews } from '../hooks/useMyReviews';
 import Link from 'next/link';
 
-export function MovieReviewList() {
-  const { reviews, loading, error, fetchReviews } = useMyReviews();
+interface MovieReviewListProps {
+  reviews: any[];
+  loading: boolean;
+  error: string | null;
+  onReload: () => void;
+}
 
-  useEffect(() => {
-    fetchReviews();
-  }, [fetchReviews]);
-
+export function MovieReviewList({ reviews, loading, error, onReload }: MovieReviewListProps) {
   if (loading) return <div>Carregando avaliações...</div>;
-  if (error) return <div className="text-red-600">Erro: {error} <button onClick={fetchReviews} className="ml-2 underline text-blue-600">Tentar novamente</button></div>;
+  if (error) return <div className="text-red-600">Erro: {error} <button onClick={onReload} className="ml-2 underline text-blue-600">Tentar novamente</button></div>;
   if (!reviews.length) {
-    return <div className="text-black">Nenhuma avaliação ainda. <Link href="/add-review" className="text-blue-500">Adicione sua primeira avaliação</Link></div>;
+    return <div>Nenhuma avaliação ainda. <Link href="/add-review" className="text-blue-500">Adicione sua primeira avaliação</Link></div>;
   }
 
   return (

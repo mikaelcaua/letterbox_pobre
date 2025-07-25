@@ -1,3 +1,4 @@
+'use client';
 import { useState } from 'react';
 import { register as registerService } from '../services/authService';
 
