@@ -2,17 +2,31 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
 
-interface NavbarProps {
-  user?: any;
+async function fetchCurrentUser() {
+  try {
+    const res = await fetch('/api/auth/me', { credentials: 'include' });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    return null;
+  }
 }
 
-export function Navbar({ user }: NavbarProps) {
+export function Navbar() {
   const router = useRouter();
+  const pathname = usePathname();
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    fetchCurrentUser().then(setUser);
+  }, [pathname]);
 
   const handleLogout = useCallback(async () => {
     await fetch('/api/auth/logout', { method: 'POST' });
+    setUser(null);
     router.push('/login');
   }, [router]);
 
