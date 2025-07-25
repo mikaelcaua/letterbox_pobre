@@ -4,7 +4,11 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
 
-export function Navbar({ user }) {
+interface NavbarProps {
+  user?: any;
+}
+
+export function Navbar({ user }: NavbarProps) {
   const router = useRouter();
 
   const handleLogout = useCallback(async () => {
