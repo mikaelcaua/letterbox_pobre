@@ -1,18 +1,20 @@
-import { getCurrentUser } from '../lib/auth'
-import { prisma } from '../lib/db'
+"use client";
 
-export async function MovieReviewList() {
-  const user = await getCurrentUser()
+import { useEffect } from 'react';
+import { useMyReviews } from '../hooks/useMyReviews';
+import Link from 'next/link';
 
-  if (!user) return <div>Faça login para ver suas avaliações</div>
+export function MovieReviewList() {
+  const { reviews, loading, error, fetchReviews } = useMyReviews();
 
-  const reviews = await prisma.review.findMany({
-    where: { userId: user.id },
-    orderBy: { createdAt: 'desc' }
-  })
+  useEffect(() => {
+    fetchReviews();
+  }, [fetchReviews]);
 
-  if (reviews.length === 0) {
-    return <div>Nenhuma avaliação ainda. <a href="/add-review" className="text-blue-500">Adicione sua primeira avaliação</a></div>
+  if (loading) return <div>Carregando avaliações...</div>;
+  if (error) return <div className="text-red-600">Erro: {error} <button onClick={fetchReviews} className="ml-2 underline text-blue-600">Tentar novamente</button></div>;
+  if (!reviews.length) {
+    return <div className="text-black">Nenhuma avaliação ainda. <Link href="/add-review" className="text-blue-500">Adicione sua primeira avaliação</Link></div>;
   }
 
   return (
@@ -28,5 +30,5 @@ export async function MovieReviewList() {
         </div>
       ))}
     </div>
-  )
+  );
 }

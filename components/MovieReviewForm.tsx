@@ -1,25 +1,27 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
-import { FormEvent } from 'react'
+import { useRouter } from 'next/navigation';
+import { FormEvent, useState } from 'react';
+import { useCreateReview } from '../hooks/useCreateReview';
 
 export function MovieReviewForm() {
-  const router = useRouter()
+  const router = useRouter();
+  const { createReview, loading, error } = useCreateReview();
+  const [formError, setFormError] = useState<string | null>(null);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault()
-    const formData = new FormData(e.currentTarget)
-
-    await fetch('/api/reviews', {
-      method: 'POST',
-      body: JSON.stringify({
-        movieName: formData.get('movieName'),
-        rating: Number(formData.get('rating')),
-        comment: formData.get('comment')
-      })
-    })
-
-    router.push('/reviews')
+    e.preventDefault();
+    setFormError(null);
+    const formData = new FormData(e.currentTarget);
+    const movieName = String(formData.get('movieName'));
+    const rating = Number(formData.get('rating'));
+    const comment = String(formData.get('comment'));
+    try {
+      await createReview({ movieName, rating, comment });
+      router.push('/reviews');
+    } catch (err: any) {
+      setFormError(err.message);
+    }
   }
 
   return (
@@ -58,7 +60,10 @@ export function MovieReviewForm() {
           className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-400 text-black"
         />
       </div>
-      <button type="submit" className="w-full bg-green-600 hover:bg-green-700 text-white p-3 rounded font-semibold transition">Enviar Avaliação</button>
+      {formError || error ? <div className="text-red-600 text-sm font-semibold">{formError || error}</div> : null}
+      <button type="submit" className="w-full bg-green-600 hover:bg-green-700 text-white p-3 rounded font-semibold transition" disabled={loading}>
+        {loading ? 'Enviando...' : 'Enviar Avaliação'}
+      </button>
     </form>
-  )
+  );
 }
