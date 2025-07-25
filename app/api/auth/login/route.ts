@@ -4,11 +4,11 @@ import { NextResponse } from 'next/server'
 
 export async function POST(request: Request) {
   const { username, password } = await request.json()
-  
+
   try {
-    const token = await loginUser(username, password)
-    
-    cookies().set('token', token, {
+    const token: string = await loginUser(username, password);
+
+    (await cookies()).set('token', token, {
       httpOnly: true,
       maxAge: 60 * 60, // 1 hour
     })

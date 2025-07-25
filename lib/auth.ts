@@ -27,8 +27,8 @@ export async function loginUser(username: string, password: string) {
   return token
 }
 
-export function getCurrentUser() {
-  const token = cookies().get('token')?.value
+export async function getCurrentUser() {
+  const token = (await cookies()).get('token')?.value
   
   if (!token) return null
   
@@ -40,6 +40,6 @@ export function getCurrentUser() {
   }
 }
 
-export function logoutUser() {
-  cookies().delete('token')
+export async function logoutUser() {
+  (await cookies()).delete('token')
 }

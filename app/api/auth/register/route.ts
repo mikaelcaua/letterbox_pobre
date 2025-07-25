@@ -7,13 +7,18 @@ export async function POST(request: Request) {
   
   try {
     const user = await registerUser(username, password)
-    const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '1h' })
-    
-    cookies().set('token', token, {
+    // Import jwt and JWT_SECRET at the top of your file:
+    // import jwt from 'jsonwebtoken'
+    // const JWT_SECRET = process.env.JWT_SECRET as string
+    // (Make sure JWT_SECRET is defined in your environment variables)
+    const jwt = require('jsonwebtoken')
+    const JWT_SECRET = process.env.JWT_SECRET as string
+    const token: string = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '1h' });
+
+    (await cookies()).set('token', token, {
       httpOnly: true,
       maxAge: 60 * 60, // 1 hour
-    })
-    
+    });
     return NextResponse.json({ success: true })
   } catch (error: any) {
     return NextResponse.json(
