@@ -23,24 +23,24 @@ export function MovieReviewForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-lg mx-auto mt-8">
-      <div className="mb-4">
-        <label htmlFor="movieName" className="block mb-2">Movie Name</label>
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <div>
+        <label htmlFor="movieName" className="block mb-2 font-medium text-gray-900">Nome do Filme</label>
         <input
           type="text"
           id="movieName"
           name="movieName"
           required
-          className="w-full p-2 border rounded"
+          className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-400 text-black"
         />
       </div>
-      <div className="mb-4">
-        <label htmlFor="rating" className="block mb-2">Rating (1-5)</label>
+      <div>
+        <label htmlFor="rating" className="block mb-2 font-medium text-gray-900">Nota (1-5)</label>
         <select
           id="rating"
           name="rating"
           required
-          className="w-full p-2 border rounded"
+          className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-400 text-black"
         >
           <option value="1">1</option>
           <option value="2">2</option>
@@ -49,18 +49,16 @@ export function MovieReviewForm() {
           <option value="5">5</option>
         </select>
       </div>
-      <div className="mb-4">
-        <label htmlFor="comment" className="block mb-2">Comment</label>
+      <div>
+        <label htmlFor="comment" className="block mb-2 font-medium text-gray-900">Comentário</label>
         <textarea
           id="comment"
           name="comment"
           rows={4}
-          className="w-full p-2 border rounded"
+          className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-400 text-black"
         />
       </div>
-      <button type="submit" className="bg-blue-500 text-white p-2 rounded">
-        Submit Review
-      </button>
+      <button type="submit" className="w-full bg-green-600 hover:bg-green-700 text-white p-3 rounded font-semibold transition">Enviar Avaliação</button>
     </form>
   )
 }
